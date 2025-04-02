@@ -1,0 +1,19 @@
+{
+    "indir": "",
+    "outdir": "",
+    "arguments": {
+        "chunk_size": [200, 500, 1000],
+        "chunk_overlap": [0, 50, 100],
+        "llm": ["mistral", "llama3.2"],
+        "db": ["redis", "chroma", "milvus"],
+        "embedding_model": ["nomic-embed-text", "all-MiniLM-L6-v2", "InstructorXL"],
+        "preproc": []
+    },
+    "search_queries": [
+        "What is the capital of France?",
+        "What does the C stand for in ACID?",
+        "What type of database is Neo4j?",
+        "Who created MongoDB?",
+        "Which is faster for random access: a linked list or an array?"
+    ]
+}

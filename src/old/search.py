@@ -5,11 +5,12 @@ from sentence_transformers import SentenceTransformer
 import ollama
 from redis.commands.search.query import Query
 from redis.commands.search.field import VectorField, TextField
+import time
 
 
 # Initialize models
 # embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
-redis_client = redis.StrictRedis(host="localhost", port=6380, decode_responses=True)
+redis_client = redis.StrictRedis(host="localhost", port=6379, decode_responses=True)
 
 VECTOR_DIM = 768
 INDEX_NAME = "embedding_index"
@@ -63,10 +64,12 @@ def search_embeddings(query, top_k=3):
         ][:top_k]
 
         # Print results for debugging
-        for result in top_results:
-            print(
-                f"---> File: {result['file']}, Page: {result['page']}, Chunk: {result['chunk']}"
-            )
+        print()
+        for result in top_results[:2]:
+            # print(
+            #     f"---> File: {result['file']}, Page: {result['page']}, Chunk: {result['chunk']}"
+            # )
+            print(f'---> {result["chunk"]}\n')
 
         return top_results
 
@@ -86,7 +89,7 @@ def generate_rag_response(query, context_results):
         ]
     )
 
-    print(f"context_str: {context_str}")
+    # print(f"context_str: {context_str}")
 
     # Construct prompt with context
     prompt = f"""You are a helpful AI assistant. 
@@ -115,6 +118,7 @@ def interactive_search():
 
     while True:
         query = input("\nEnter your search query: ")
+        t = time.time()
 
         if query.lower() == "exit":
             break
@@ -125,7 +129,8 @@ def interactive_search():
         # Generate RAG response
         response = generate_rag_response(query, context_results)
 
-        print("\n--- Response ---")
+        t = round(time.time() - t, 2)
+        print(f"\n--- Response  in {t}s ---")
         print(response)
 
 
