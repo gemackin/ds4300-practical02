@@ -10,7 +10,7 @@ def track_time(func):
     return inner
 
 
-# Decorator function for tracking memory usage in GB
+# Decorator function for tracking memory usage in MB
 # Currently implents resident set size, virtual memory size, and peak working set size
 def track_memory(func):
     def inner(*args, **kwargs):
@@ -20,7 +20,7 @@ def track_memory(func):
         result = func(*args, **kwargs)
         pmem = proc.memory_info() # Querying process memory again
         after = np.array([pmem.rss, pmem.vms, pmem.peak_wset])
-        return result, list((after - before) / 1e6)
+        return result, list((after - before) / 1e6) # Convert to MB
     return inner
 
 
