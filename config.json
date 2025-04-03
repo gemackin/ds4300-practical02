@@ -1,13 +1,13 @@
 {
-    "indir": "",
-    "outdir": "",
+    "indir": "C:/Users/gmack/Documents/Code/DS4300/ds4300-practical02/data",
+    "outdir": "C:/Users/gmack/Documents/Code/DS4300/ds4300-practical02/output",
     "arguments": {
         "chunk_size": [200, 500, 1000],
         "chunk_overlap": [0, 50, 100],
         "llm": ["mistral", "llama3.2"],
+        "embedding_model": ["nomic-embed-text", "all-MiniLM-L6-v2", "all-mpnet-base-v2"],
         "db": ["redis", "chroma", "milvus"],
-        "embedding_model": ["nomic-embed-text", "all-MiniLM-L6-v2", "InstructorXL"],
-        "preproc": []
+        "preproc": ["preprocess_text"]
     },
     "search_queries": [
         "What is the capital of France?",

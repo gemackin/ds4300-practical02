@@ -12,13 +12,12 @@ DISTANCE_METRIC = 'COSINE'
 
 # Represents a redis-stack vector database instance
 class RedisDB(Database):
-    def __init__(self, embedding_model, port=6380):
-        self.embedding_model = embedding_model
+    def __init__(self, port=6380, **kwargs):
+        self.config(**kwargs)
         self.client = redis.Redis(host='localhost', port=port, db=0)
-        self.INDEX_NAME = "embedding_index"
-        self.DOC_PREFIX = "doc:"
+        self.use_embedding = True
         self.clear()
-        self._create_hsnw_index()
+        self._create_hnsw_index()
 
 
     def _create_hnsw_index(self):
@@ -32,19 +31,19 @@ class RedisDB(Database):
         self.client.flushdb()
 
 
-    def store_embedding(self, embedding, **kwargs):
+    def store_embedding(self, embedding, raw, **kwargs):
         key = f'{DOC_PREFIX}:{"_".join([f"{k}_{v}" for k, v in kwargs.items()])}'
         embedding = np.array(embedding, dtype=np.float32).tobytes() # byte array
-        self.client.hset(key, mapping={'embedding':embedding, **kwargs})
+        self.client.hset(key, mapping={'embedding':embedding, 'text': raw, **kwargs})
 
     
-    def query_embedding(self, embedding, k=3):
+    def query_embedding(self, embedding, raw, k=3):
         def format_result(r):
-            return {'file': r.file, 'page': r.page, 'chunk': r.chunk, 'similarity': r.vector_distance}
+            return {'file': r.file, 'page': r.page, 'chunk': r.chunk, 'similarity': r.vector_distance, 'text': r.text}
         query_vector = np.array(embedding, dtype=np.float32).tobytes()
         q = Query('*=>[KNN 5 @embedding $vec AS vector_distance]')\
             .sort_by('vector_distance')\
-            .return_fields(*'id file page chunk vector_distance'.split())\
+            .return_fields(*'id file page chunk vector_distance text'.split())\
             .dialect(2)
         results = self.client.ft(INDEX_NAME).search(q, query_params={'vec': query_vector})
         return list(map(format_result, results.docs[:k]))
