@@ -15,14 +15,14 @@ Then, to run the script, navigate to the repository folder in the command line a
 
 ## Organization of `config.json`
 - `arguments`: The list of possible arguments that are used in configuring each run
-- - `chunk_size`: The number of words to use in each chunk for preprocessing the index text
-- - `chunk_overlap`: The number of words to overlap each chunk for preprocessing the index text
-- - `llm`: The name of the large language model from Ollama to be used for generating responses
-- - `embedding_model`: The name of the model from Ollama or SentenceTransformers to be used for embedding
-- - `db`: The name of the vector database to use
-- - `preproc`: The name of the preprocessing function to use for raw text
-- - - The preprocessing function must already be implemented in the Python code
-- - - Use argument "dont_preprocess_text" to simply use the text separated by whitespace
+  - `chunk_size`: The number of words to use in each chunk for preprocessing the index text
+  - `chunk_overlap`: The number of words to overlap each chunk for preprocessing the index text
+  - `llm`: The name of the large language model from Ollama to be used for generating responses
+  - `embedding_model`: The name of the model from Ollama or SentenceTransformers to be used for embedding
+  - `db`: The name of the vector database to use
+  - `preproc`: The name of the preprocessing function to use for raw text
+    - The preprocessing function must already be implemented in the Python code
+    - Use argument "dont_preprocess_text" to simply use the text separated by whitespace
 - `search_queries`: A list of questions to search for in the database and return responses from the LLM
 
 ## Organization of Output
